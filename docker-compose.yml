@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: api-caller-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - api-caller-network
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-caller-app
+    ports:
+      - "${PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - api-caller-network
+    restart: unless-stopped
+
+  webhook-test:
+    build:
+      context: .
+      dockerfile: Dockerfile-webhook
+    container_name: webhook_test
+    ports:
+      - "${WEBHOOK_PORT}:3009"
+    env_file:
+      - .env
+    networks:
+      - api-caller-network
+    restart: unless-stopped
+    
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  api-caller-network:
+    driver: bridge
+
+
+
+

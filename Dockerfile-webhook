@@ -1,0 +1,12 @@
+FROM node:20
+
+WORKDIR /app
+
+COPY _scripts/package*.json ./
+
+RUN npm install --production
+
+COPY _scripts/webhook.js ./
+COPY _scripts/.env ./
+
+CMD ["node", "webhook.js"]
