@@ -74,6 +74,9 @@ Expected response: `"Hello World!"`
 
 ## 📝 Test Examples
 
+* ⚠️ Important: If you are using your local machine as a webhook, make sure to pass the URL in the format:
+* http://webhook-test:<your-port>/webhook
+
 ### Example 1: Simple GET Request
 
 ```bash
