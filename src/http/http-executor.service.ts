@@ -4,15 +4,14 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import {
-  ERROR_CODES,
   ERROR_MESSAGES,
   HTTP_STATUS_RANGES,
-  NETWORK_ERROR_CODES,
 } from '../_common/constants/error-codes.constants';
 import { DEFAULT_HTTP_VALUES } from '../_common/constants/default-values.constants';
 import { HttpError } from '../_common/errors/http.error';
 import { HttpResponse } from '../_common/types/http.types';
 import { TaskData } from '../_common/types/task.types';
+import { handleError } from 'src/_common/helpers/handle-error';
 
 @Injectable()
 export class HttpExecutorService {
@@ -65,17 +64,16 @@ export class HttpExecutorService {
           throw new Error(`Unsupported HTTP method: ${task.method}`);
       }
 
+      const { status } = response;
       // Checks client errors (4xx)
       if (
-        !!response &&
-        'status' in response &&
-        response.status >= HTTP_STATUS_RANGES.CLIENT_ERROR_START &&
-        response.status < HTTP_STATUS_RANGES.CLIENT_ERROR_END &&
-        response.status !== (HttpStatus.TOO_MANY_REQUESTS as number)
+        status >= HTTP_STATUS_RANGES.CLIENT_ERROR_START &&
+        status < HTTP_STATUS_RANGES.CLIENT_ERROR_START &&
+        status !== +HttpStatus.TOO_MANY_REQUESTS
       ) {
         throw new HttpError(
           `Request failed with status code ${response.status}`,
-          undefined,
+          response.status,
           {
             status: response.status,
             headers: response.headers,
@@ -89,25 +87,15 @@ export class HttpExecutorService {
         body: response.data,
       };
     } catch (error: unknown) {
-      if (error instanceof HttpError) {
-        throw error;
-      }
-
-      const axiosError = error as { code?: string; message?: string };
-      if (
-        axiosError.code === NETWORK_ERROR_CODES.ECONNABORTED ||
-        axiosError.message?.includes('timeout')
-      ) {
+      const axiosError = handleError(error);
+      if (axiosError.status === +HttpStatus.REQUEST_TIMEOUT) {
         throw new HttpError(
           ERROR_MESSAGES.REQUEST_TIMEOUT,
-          NETWORK_ERROR_CODES.ETIMEDOUT,
+          HttpStatus.REQUEST_TIMEOUT,
         );
       }
 
-      throw new HttpError(
-        axiosError.message || ERROR_MESSAGES.REQUEST_FAILED,
-        axiosError.code || ERROR_CODES.UNKNOWN_ERROR,
-      );
+      throw new HttpError(axiosError.message || ERROR_MESSAGES.REQUEST_FAILED);
     }
   }
 

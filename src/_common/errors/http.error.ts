@@ -1,5 +1,5 @@
 export class HttpError extends Error {
-  public readonly code?: string;
+  public readonly code?: number;
 
   public readonly response?: {
     status: number;
@@ -8,7 +8,7 @@ export class HttpError extends Error {
 
   constructor(
     message: string,
-    code?: string,
+    code?: number,
     response?: {
       status: number;
       headers?: Record<string, unknown>;
