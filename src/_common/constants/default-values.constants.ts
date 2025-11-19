@@ -1,0 +1,36 @@
+export const DEFAULT_HTTP_VALUES = {
+  TIMEOUT: 30000,
+  MAX_REDIRECTS: 5,
+} as const;
+
+export const DEFAULT_TASK_VALUES = {
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 1000,
+} as const;
+
+export const DEFAULT_CALLBACK_VALUES = {
+  TIMEOUT: 10000,
+  MAX_RETRIES: 2,
+  RETRY_DELAY: 5000,
+} as const;
+
+export const DEFAULT_QUEUE_VALUES = {
+  SEQUENTIAL_WORKER: { CONCURRENCY: 1, NAME: '' },
+  PARALLEL_WORKER: { CONCURRENCY: 10, NAME: 'parallel_queue' },
+} as const;
+
+export const DEFAULT_SERVER_VALUES = {
+  PORT: 3000,
+} as const;
+
+export const DEFAULT_REDIS_VALUES = {
+  RETRY_DELAY_MULTIPLIER: 50,
+  MAX_RETRY_DELAY: 2000,
+} as const;
+
+export const VALIDATION_CONSTRAINTS = {
+  MIN_TIMEOUT: 1000,
+  MIN_MAX_RETRIES: 1,
+  MAX_MAX_RETRIES: 10,
+  MIN_RETRY_DELAY: 100,
+} as const;
