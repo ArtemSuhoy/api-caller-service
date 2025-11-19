@@ -15,7 +15,7 @@ export const DEFAULT_CALLBACK_VALUES = {
 } as const;
 
 export const DEFAULT_QUEUE_VALUES = {
-  SEQUENTIAL_WORKER: { CONCURRENCY: 1, NAME: '' },
+  SEQUENTIAL_WORKER: { CONCURRENCY: 1, NAME: 'sequential_queue' },
   PARALLEL_WORKER: { CONCURRENCY: 10, NAME: 'parallel_queue' },
 } as const;
 
