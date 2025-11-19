@@ -174,7 +174,7 @@ curl -X POST http://localhost:3000/api/tasks \
   "taskId": "...",
   "status": "failed",
   "attempts": 1,
-  "error": {"message": "Request failed with status code 404","code": "UNKNOWN_ERROR","httpStatus": 404},
+  "error": {"message": "Request failed with status code 404", "code": 404,},
   "executionTime": 150,
   "timestamp": "2024-01-15T10:30:00.000Z"
 }
