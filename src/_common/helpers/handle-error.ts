@@ -1,11 +1,5 @@
 import { AxiosError } from 'axios';
-
-interface NormalizedError {
-  message: string;
-  status: number;
-  data?: unknown;
-  isAxios: boolean;
-}
+import { NormalizedError } from '../types/error.types';
 
 function isAxiosError(error: unknown): error is AxiosError {
   return typeof error === 'object' && error !== null && 'isAxiosError' in error;

@@ -141,7 +141,7 @@ After task execution (success or failure), a POST request is sent to `callbackUr
   "taskId": "550e8400-e29b-41d4-a716-446655440000",
   "status": "failed",
   "attempts": 3,
-  "error": {"message": "Request failed with status code 500","code": "SERVER_ERROR","httpStatus": 500},
+  "error": {"message": "Request failed with status code 500", "code": 500},
   "executionTime": 15234,
   "timestamp": "2024-01-15T10:30:15.000Z"
 }
